@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Search, Plus, Menu, X, Eye, FileText, Trash2, Download } from 'lucide-react';
+import { Search, Plus, Menu, X, Eye, FileText, Trash2, Download, CheckCircle } from 'lucide-react';
 import Sidebar from '../../components/Sidebar';
-import { getInvoices, deleteInvoice } from '../../services/api';
+import { getInvoices, deleteInvoice, updateInvoice } from '../../services/api';
 import { Link } from 'react-router-dom';
 
 const ManageInvoices = () => {
@@ -31,6 +31,16 @@ const ManageInvoices = () => {
       } catch (err) {
         console.error('Error deleting invoice:', err);
       }
+    }
+  };
+
+  const handleUpdateStatus = async (id, newStatus) => {
+    try {
+      await updateInvoice(id, { paymentStatus: newStatus });
+      fetchInvoices(); // Refresh the list
+    } catch (err) {
+      console.error('Error updating status:', err);
+      alert('Failed to update status');
     }
   };
 
@@ -159,23 +169,32 @@ const ManageInvoices = () => {
                     <td className="p-4 text-sm font-bold text-white">₹{invoice.totalAmount.toLocaleString()}</td>
                     <td className="p-4">{getStatusBadge(invoice.paymentStatus)}</td>
                     <td className="p-4 text-sm text-gray-400">{new Date(invoice.createdAt).toLocaleDateString()}</td>
-                    <td className="p-4">
-                      <div className="flex items-center justify-center gap-2">
-                        <button className="p-2 text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors" title="Download PDF">
-                          <FileText size={18} />
-                        </button>
-                        <button 
-                          onClick={() => handleDelete(invoice._id)}
-                          className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors" 
-                          title="Delete"
-                        >
-                          <X size={18} />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
+                      <td className="p-4">
+                        <div className="flex items-center justify-center gap-2">
+                          {invoice.paymentStatus !== 'paid' && (
+                            <button 
+                              onClick={() => handleUpdateStatus(invoice._id, 'paid')}
+                              className="p-2 text-green-400 hover:bg-green-500/10 rounded-lg transition-colors" 
+                              title="Mark as Paid"
+                            >
+                              <CheckCircle size={18} />
+                            </button>
+                          )}
+                          <button className="p-2 text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors" title="Download PDF">
+                            <FileText size={18} />
+                          </button>
+                          <button 
+                            onClick={() => handleDelete(invoice._id)}
+                            className="p-2 text-red-400 hover:bg-red-500/10 rounded-lg transition-colors" 
+                            title="Delete"
+                          >
+                            <X size={18} />
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
             </table>
             {invoices.length === 0 && (
               <div className="p-10 text-center text-gray-500">

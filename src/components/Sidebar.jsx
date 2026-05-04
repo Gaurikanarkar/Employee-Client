@@ -13,7 +13,8 @@ import {
   Database,
   Folder,
   Wrench,
-  FileText
+  FileText,
+  PieChart
 } from 'lucide-react';
 
 const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
@@ -29,6 +30,7 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
 
   const navItems = [
     { name: 'Dashboard', icon: LayoutDashboard, path: '/admin/dashboard' },
+    { name: 'Reports', icon: PieChart, path: '/admin/reports' },
     { name: 'Tasks', icon: CheckSquare, path: '/admin/tasks' },
   ];
 

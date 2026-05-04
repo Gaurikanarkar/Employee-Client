@@ -15,6 +15,7 @@ import ManageInvoices from './pages/Invoices/ManageInvoices';
 import CreateInvoice from './pages/Invoices/CreateInvoice';
 import AdminDocumentation from './pages/AdminDocumentation';
 import EmployeeDocumentation from './pages/EmployeeDocumentation';
+import AdminReports from './pages/AdminReports';
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -48,6 +49,7 @@ function App() {
         <Route path="/admin/clients/invoices" element={<ProtectedRoute allowedRole="admin"><ManageInvoices /></ProtectedRoute>} />
         <Route path="/admin/clients/invoices/create" element={<ProtectedRoute allowedRole="admin"><CreateInvoice /></ProtectedRoute>} />
         
+        <Route path="/admin/reports" element={<ProtectedRoute allowedRole="admin"><AdminReports /></ProtectedRoute>} />
         <Route path="/admin/documentation" element={<ProtectedRoute allowedRole="admin"><AdminDocumentation /></ProtectedRoute>} />
         
         <Route 
