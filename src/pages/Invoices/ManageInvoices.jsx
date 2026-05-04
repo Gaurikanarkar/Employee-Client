@@ -43,15 +43,35 @@ const ManageInvoices = () => {
   };
 
   const handleExport = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + ["Invoice #,Client,Amount,Payment Status,Date"].join(",") + "\n"
-      + invoices.map(i => `${i.invoiceNumber},${i.client?.organization},${i.totalAmount},${i.paymentStatus},${new Date(i.createdAt).toLocaleDateString()}`).join("\n");
-    const encodedUri = encodeURI(csvContent);
+    const escapeCsv = (field) => {
+      if (field == null) return '""';
+      const str = String(field);
+      if (str.includes('"') || str.includes(',') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    const headers = ["Invoice #", "Client", "Amount", "Payment Status", "Date"];
+    const rows = invoices.map(i => [
+      i.invoiceNumber,
+      i.client?.organization,
+      i.totalAmount,
+      i.paymentStatus,
+      new Date(i.createdAt).toLocaleDateString()
+    ].map(escapeCsv).join(","));
+
+    const csvContent = [headers.join(","), ...rows].join("\n");
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute("download", "invoices_export.csv");
     document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
 
   return (

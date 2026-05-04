@@ -68,10 +68,21 @@ const CreateQuote = () => {
     setLoading(true);
     try {
       const totalAmount = calculateTotal();
-      await createQuote({ ...formData, totalAmount });
+      const payload = { ...formData, totalAmount };
+      
+      if (!payload.validUntil) delete payload.validUntil;
+      
+      if (!payload.client) {
+        alert("Please select a client.");
+        setLoading(false);
+        return;
+      }
+
+      await createQuote(payload);
       navigate('/admin/clients/quotes');
     } catch (err) {
       console.error('Error creating quote:', err);
+      alert(err.response?.data?.error || err.response?.data?.msg || 'Failed to create quote. Check console for details.');
     } finally {
       setLoading(false);
     }

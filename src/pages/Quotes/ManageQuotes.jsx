@@ -24,7 +24,8 @@ const ManageQuotes = () => {
   };
 
   const handleDelete = async (id) => {
-    if (window.confirm('Are you sure you want to deactivate this quote?')) {
+    const actionText = statusFilter === 'active' ? 'deactivate' : 'permanently delete';
+    if (window.confirm(`Are you sure you want to ${actionText} this quote?`)) {
       try {
         await deleteQuote(id);
         fetchQuotes();
@@ -35,15 +36,35 @@ const ManageQuotes = () => {
   };
 
   const handleExport = () => {
-    const csvContent = "data:text/csv;charset=utf-8," 
-      + ["Quote #,Client,Subject,Amount,Date"].join(",") + "\n"
-      + quotes.map(q => `${q.quoteNumber},${q.client?.organization},${q.subject},${q.totalAmount},${new Date(q.createdAt).toLocaleDateString()}`).join("\n");
-    const encodedUri = encodeURI(csvContent);
+    const escapeCsv = (field) => {
+      if (field == null) return '""';
+      const str = String(field);
+      if (str.includes('"') || str.includes(',') || str.includes('\n')) {
+        return `"${str.replace(/"/g, '""')}"`;
+      }
+      return str;
+    };
+
+    const headers = ["Quote #", "Client", "Subject", "Amount", "Date"];
+    const rows = quotes.map(q => [
+      q.quoteNumber,
+      q.client?.organization,
+      q.subject,
+      q.totalAmount,
+      new Date(q.createdAt).toLocaleDateString()
+    ].map(escapeCsv).join(","));
+
+    const csvContent = [headers.join(","), ...rows].join("\n");
+    
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    
     const link = document.createElement("a");
-    link.setAttribute("href", encodedUri);
+    link.setAttribute("href", url);
     link.setAttribute("download", "quotes_export.csv");
     document.body.appendChild(link);
     link.click();
+    document.body.removeChild(link);
   };
 
   return (
