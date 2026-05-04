@@ -151,6 +151,20 @@ const Sidebar = ({ sidebarOpen, setSidebarOpen }) => {
             </Link>
           </li>
 
+          <li>
+            <Link 
+              to="/admin/documentation" 
+              className={`flex items-center gap-3 px-4 py-3 rounded-xl transition-all cursor-pointer ${
+                path === '/admin/documentation'
+                  ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-500/30' 
+                  : 'text-gray-400 hover:text-white hover:bg-gray-800'
+              }`}
+            >
+              <FileText size={20} />
+              <span className="font-medium text-sm">Documentation</span>
+            </Link>
+          </li>
+
           {/* Masters Section */}
           <li>
             <button 

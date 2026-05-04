@@ -53,4 +53,12 @@ export const getInvoiceById = (id) => API.get(`/invoices/${id}`);
 export const updateInvoice = (id, invoiceData) => API.put(`/invoices/${id}`, invoiceData);
 export const deleteInvoice = (id) => API.delete(`/invoices/${id}`);
 
+// Documentation
+export const getAllDocuments = () => API.get('/documents');
+export const getMyDocuments = (userId) => API.get(`/documents/my-documents?userId=${userId}`);
+export const uploadDocument = (data) => API.post('/documents', data, { headers: { 'Content-Type': 'multipart/form-data' } });
+export const updateDocumentStatus = (id, data) => API.put(`/documents/${id}/status`, data);
+export const deleteDocument = (id) => API.delete(`/documents/${id}`);
+export const downloadDocument = (id) => API.get(`/documents/${id}/download`, { responseType: 'blob' });
+
 export default API;

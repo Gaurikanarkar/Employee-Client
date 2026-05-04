@@ -8,6 +8,7 @@ const ManageQuotes = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('active');
+  const [viewingQuote, setViewingQuote] = useState(null);
   const [quotes, setQuotes] = useState([]);
 
   useEffect(() => {
@@ -154,7 +155,7 @@ const ManageQuotes = () => {
                     <td className="p-4 text-sm text-gray-400">{new Date(quote.createdAt).toLocaleDateString()}</td>
                     <td className="p-4">
                       <div className="flex items-center justify-center gap-2">
-                        <button className="p-2 text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors" title="View">
+                        <button onClick={() => setViewingQuote(quote)} className="p-2 text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors" title="View">
                           <Eye size={18} />
                         </button>
                         <button className="p-2 text-amber-400 hover:bg-amber-500/10 rounded-lg transition-colors" title="Edit">
@@ -183,6 +184,67 @@ const ManageQuotes = () => {
             )}
           </div>
         </div>
+        {/* View Quote Modal */}
+        {viewingQuote && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-800 rounded-2xl w-full max-w-2xl border border-gray-700 shadow-2xl animate-in fade-in zoom-in duration-200">
+              <div className="p-6 border-b border-gray-700 flex justify-between items-center">
+                <h3 className="text-xl font-bold text-white">Quote Details</h3>
+                <button onClick={() => setViewingQuote(null)} className="text-gray-400 hover:text-white">
+                  <X size={24} />
+                </button>
+              </div>
+              <div className="p-6 space-y-6">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Quote Number</label>
+                    <p className="text-indigo-400 font-bold">{viewingQuote.quoteNumber}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Client</label>
+                    <p className="text-white font-medium">{viewingQuote.client?.organization}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Subject</label>
+                    <p className="text-white">{viewingQuote.subject}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Category & Project Code</label>
+                    <p className="text-gray-300">{viewingQuote.category} / {viewingQuote.projectCode}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Document Type</label>
+                    <p className="text-white">{viewingQuote.documentType}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Total Amount</label>
+                    <p className="text-xl font-black text-white">₹{viewingQuote.totalAmount.toLocaleString()}</p>
+                  </div>
+                </div>
+
+                {viewingQuote.additionalItems && viewingQuote.additionalItems.length > 0 && (
+                  <div className="pt-4 border-t border-gray-700">
+                    <label className="block text-gray-500 text-xs mb-3">Additional Items</label>
+                    <div className="space-y-2">
+                      {viewingQuote.additionalItems.map((item, idx) => (
+                        <div key={idx} className="flex justify-between bg-gray-700/50 p-2.5 rounded-lg text-sm">
+                          <span className="text-gray-300">{item.description}</span>
+                          <span className="text-white font-bold">₹{item.amount.toLocaleString()}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                
+                <div className="pt-4 flex justify-end">
+                  <button onClick={() => setViewingQuote(null)} className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-xl transition-all">
+                    Close
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

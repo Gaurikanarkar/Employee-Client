@@ -13,6 +13,8 @@ import ManageQuotes from './pages/Quotes/ManageQuotes';
 import CreateQuote from './pages/Quotes/CreateQuote';
 import ManageInvoices from './pages/Invoices/ManageInvoices';
 import CreateInvoice from './pages/Invoices/CreateInvoice';
+import AdminDocumentation from './pages/AdminDocumentation';
+import EmployeeDocumentation from './pages/EmployeeDocumentation';
 
 const ProtectedRoute = ({ children, allowedRole }) => {
   const user = JSON.parse(localStorage.getItem('user'));
@@ -46,6 +48,8 @@ function App() {
         <Route path="/admin/clients/invoices" element={<ProtectedRoute allowedRole="admin"><ManageInvoices /></ProtectedRoute>} />
         <Route path="/admin/clients/invoices/create" element={<ProtectedRoute allowedRole="admin"><CreateInvoice /></ProtectedRoute>} />
         
+        <Route path="/admin/documentation" element={<ProtectedRoute allowedRole="admin"><AdminDocumentation /></ProtectedRoute>} />
+        
         <Route 
           path="/admin/dashboard" 
           element={
@@ -60,6 +64,15 @@ function App() {
           element={
             <ProtectedRoute allowedRole="employee">
               <EmployeeDashboard />
+            </ProtectedRoute>
+          } 
+        />
+        
+        <Route 
+          path="/employee/documentation" 
+          element={
+            <ProtectedRoute allowedRole="employee">
+              <EmployeeDocumentation />
             </ProtectedRoute>
           } 
         />

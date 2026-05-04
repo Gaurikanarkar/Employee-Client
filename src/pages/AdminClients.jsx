@@ -8,6 +8,7 @@ const AdminClients = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState('active'); // 'active' or 'inactive'
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [viewingClient, setViewingClient] = useState(null);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -179,7 +180,7 @@ const AdminClients = () => {
                     </td>
                     <td className="p-4">
                       <div className="flex items-center gap-2">
-                        <button className="p-2 text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors" title="View">
+                        <button onClick={() => setViewingClient(client)} className="p-2 text-indigo-400 hover:bg-indigo-500/10 rounded-lg transition-colors" title="View">
                           <Eye size={18} />
                         </button>
                         <button className="p-2 text-amber-400 hover:bg-amber-500/10 rounded-lg transition-colors" title="Edit">
@@ -289,6 +290,54 @@ const AdminClients = () => {
                   </button>
                 </div>
               </form>
+            </div>
+          </div>
+        )}
+        {/* View Client Modal */}
+        {viewingClient && (
+          <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+            <div className="bg-gray-800 rounded-2xl w-full max-w-lg border border-gray-700 shadow-2xl animate-in fade-in zoom-in duration-200">
+              <div className="p-6 border-b border-gray-700 flex justify-between items-center">
+                <h3 className="text-xl font-bold text-white">Client Details</h3>
+                <button onClick={() => setViewingClient(null)} className="text-gray-400 hover:text-white">
+                  <X size={24} />
+                </button>
+              </div>
+              <div className="p-6 space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Organization Name</label>
+                    <p className="text-white font-medium">{viewingClient.organization}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Category</label>
+                    <span className={`w-fit px-2 py-0.5 rounded text-[10px] font-bold border ${getCategoryColor(viewingClient.category)}`}>
+                      {viewingClient.category}
+                    </span>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Primary Contact</label>
+                    <p className="text-white">{viewingClient.contactName}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Contact Email</label>
+                    <p className="text-gray-300">{viewingClient.contactEmail}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Status</label>
+                    <p className="text-white capitalize">{viewingClient.status}</p>
+                  </div>
+                  <div>
+                    <label className="block text-gray-500 text-xs mb-1">Created At</label>
+                    <p className="text-gray-300">{new Date(viewingClient.createdAt).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                <div className="pt-4 flex justify-end">
+                  <button onClick={() => setViewingClient(null)} className="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-xl transition-all">
+                    Close
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         )}

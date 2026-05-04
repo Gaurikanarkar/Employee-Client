@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { LayoutDashboard, Bell, LogOut, Clock, AlertCircle, CheckCircle, Calendar, Search, CheckSquare, Menu, X } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { LayoutDashboard, Bell, LogOut, Clock, AlertCircle, CheckCircle, Calendar, Search, CheckSquare, Menu, X, FileText } from 'lucide-react';
 import { getMyTasks, updateTaskStatus } from '../services/api';
 
 const EmployeeDashboard = () => {
@@ -90,8 +91,9 @@ const EmployeeDashboard = () => {
           <button onClick={() => setSidebarOpen(false)} className="lg:hidden text-gray-400"><X size={24} /></button>
         </div>
         <ul className="space-y-2 flex-1">
-          <li className="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 cursor-pointer"><LayoutDashboard size={20} /><span>My Dashboard</span></li>
-          <li className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 cursor-pointer transition-all"><Bell size={20} /><span>Notifications</span></li>
+          <Link to="/employee/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-xl bg-indigo-600 text-white shadow-lg shadow-indigo-500/30 transition-all"><LayoutDashboard size={20} /><span className="font-medium text-sm">My Dashboard</span></Link>
+          <li className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 cursor-pointer transition-all"><Bell size={20} /><span className="font-medium text-sm">Notifications</span></li>
+          <Link to="/employee/documentation" className="flex items-center gap-3 px-4 py-3 rounded-xl text-gray-400 hover:text-white hover:bg-gray-800 transition-all"><FileText size={20} /><span className="font-medium text-sm">Documentation</span></Link>
         </ul>
         {user && (
           <div className="bg-gray-800 p-4 rounded-xl mt-auto">
